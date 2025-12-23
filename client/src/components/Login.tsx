@@ -40,7 +40,8 @@ export default function Login() {
     } finally {
       setLoading(false);
     }
-    navigate("/");
+    
+
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -50,12 +51,12 @@ export default function Login() {
   };
 
   return (
-    <div className="w-100 mt-45 border border-gray-200 rounded-md p-5 pt-10 pb-10">
-      <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
-
+    <div className="w-90 mt-45 border border-gray-500 rounded-md p-5 pt-10 pb-10">
+      <h2 className="text-xl font-semibold text-center mb-8 text-gray-300">Welcome to <span className="bg-linear-to-b from-blue-400 to-blue-700 bg-clip-text text-transparent">ShortURL!</span></h2>
+      <div></div>
       <div>
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-semibold mb-2 ">
+          <label className="block text-gray-400 text-sm font-semibold mb-2">
             Email
           </label>
           <input
@@ -63,14 +64,14 @@ export default function Login() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             onKeyPress={handleKeyPress}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm outline-none"
+            className="w-full px-3 py-3 border border-gray-500 rounded-md text-gray-300 text-xs outline-none"
             placeholder="Enter your email"
             disabled={loading}
           />
         </div>
 
-        <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-semibold mb-2">
+        <div className="mb-4">
+          <label className="block text-gray-400 text-sm font-semibold mb-2">
             Password
           </label>
           <input
@@ -78,14 +79,14 @@ export default function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             onKeyPress={handleKeyPress}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm outline-none"
+            className="w-full px-3 py-3 border border-gray-500 rounded-md text-gray-300 text-xs outline-none"
             placeholder="Enter your password"
             disabled={loading}
           />
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md text-sm">
+          <div className=" text-red-400 rounded-md text-xs">
             {error}
           </div>
         )}
@@ -93,17 +94,17 @@ export default function Login() {
         <button
           onClick={handleLogin}
           disabled={loading}
-          className="w-full bg-gray-950 text-white text-sm py-2 px-4 rounded-md hover:cursor-pointer transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full mt-4 bg-linear-to-b from-blue-400 to-blue-600 text-gray-100 text-xs py-3 rounded-md hover:cursor-pointer"
         >
           {loading ? "Logging in..." : "Login"}
         </button>
       </div>
 
-      <p className="mt-4 text-center text-sm text-gray-600">
+      <p className="mt-4 text-center text-sm text-gray-300">
         Don't have an account?{" "}
         <a
           onClick={() => navigate("/signup")}
-          className="underline hover:cursor-pointer font-semibold"
+          className="underline hover:cursor-pointer font-semibold text-gray-200"
         >
           Sign up
         </a>
