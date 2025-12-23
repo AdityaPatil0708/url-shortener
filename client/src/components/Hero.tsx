@@ -1,13 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
 export default function Hero() {
   const [url, setUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, []);
+
   const handleShorten = async () => {
     setError("");
     setShortUrl("");
@@ -34,25 +43,28 @@ export default function Hero() {
         return;
       }
 
-      const response = await fetch("http://localhost:3000/api/shorten", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ url }),
-      });
+      const response = await axios.post(
+        "http://localhost:3000/api/shortenurl",
+        { url },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      const data = await response.json();
-
-      if (data.success) {
-        setShortUrl(data.shortUrl);
+      if (response.data.success) {
+        setShortUrl(response.data.shortUrl);
         setError("");
       } else {
-        setError(data.message || "Failed to shorten URL");
+        setError(response.data.message || "Failed to shorten URL");
       }
     } catch (err) {
-      setError("Network error. Please try again.");
+      if (axios.isAxiosError(err) && err.response) {
+        setError(err.response.data.message || "Failed to shorten URL");
+      } else {
+        setError("Network error. Please try again.");
+      }
       console.error("Error:", err);
     } finally {
       setLoading(false);
@@ -64,71 +76,105 @@ export default function Hero() {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+  const handleReset = () => {
+    setUrl("");
+    setShortUrl("");
+    setError("");
+    setCopied(false);
+  };
+
+  const handleAuthAction = async () => {
+    if (isLoggedIn) {
+      try {
+        await axios.post("http://localhost:3000/api/logout");
+      } catch (err) {
+        console.error("Logout error:", err);
+      } finally {
+        localStorage.removeItem("token");
+        setIsLoggedIn(false);
+        setUrl("");
+        setShortUrl("");
+        setError("");
+      }
+    } else {
+      navigate("/login");
+    }
+  };
+
   return (
-    <div className="mt-45">
-      <div className="flex justify-between items-center pr-4">
-        <button className="text-4xl hover:cursor-pointer text-gray-300 font-semibold">
-          <span className="bg-linear-to-b from-blue-400 to-blue-700 bg-clip-text text-transparent">Short</span>Url
+    <div className="mt-45 md:mt-45 px-4 md:px-0">
+      <div className="flex justify-between items-center pr-0 md:pr-4">
+        <button className="text-2xl md:text-4xl hover:cursor-pointer text-gray-300 font-semibold">
+          <span className="bg-linear-to-b from-blue-400 to-blue-700 bg-clip-text text-transparent">
+            Short
+          </span>
+          Url
         </button>
         <button
-          onClick={() => navigate("/login")}
-          className="bg-linear-to-b from-blue-400 to-blue-600 hover:cursor-pointer text-white transition duration-200 w-16 p-2 rounded-sm text-xs"
+          onClick={handleAuthAction}
+          className="bg-linear-to-b from-blue-400 to-blue-600 hover:cursor-pointer text-white hover:opacity-90 transition duration-200 w-14 md:w-16 p-2 rounded-sm text-xs"
         >
-          Login
+          {isLoggedIn ? "Logout" : "Login"}
         </button>
       </div>
 
-
-      <div className="mt-15 border border-gray-500 rounded-md p-4 pb-8">
-        <p className="text-xl font-semibold text-gray-400">
+      <div className="mt-8 md:mt-15 border border-gray-500  rounded-md p-3 md:p-4 pb-6 md:pb-8">
+        <p className="text-lg md:text-xl font-semibold text-gray-400">
           Paste the URL here
         </p>
-        <div className="">
+        <div className="flex flex-col md:flex-row md:items-start gap-2 md:gap-0">
           <input
             type="text"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            className="bg-gray-300 text-xs  p-3 w-105 outline-none mt-4 rounded-xs"
+            className="bg-gray-300 text-xs p-3 w-full md:w-105 outline-none mt-4 rounded-xs"
             placeholder="Enter the link here"
             disabled={loading}
           />
-          <span>
-            <button
-              onClick={handleShorten}
-              disabled={loading}
-              className="hover:cursor-pointer bg-linear-to-b from-blue-400 to-blue-600 text-white text-xs p-3 mt-2 ml-5 rounded-sm transition duration-200 disabled:opacity-50"
-            >
-              {loading ? "Shortening..." : "Shorten URL"}
-            </button>
-          </span>
+          <button
+            onClick={handleShorten}
+            disabled={loading}
+            className="hover:cursor-pointer bg-linear-to-b from-blue-400 to-blue-600 text-white text-xs p-3 md:mt-4 md:ml-5 rounded-sm hover:opacity-90 transition duration-200 disabled:opacity-50 w-full md:w-auto"
+          >
+            {loading ? "Shortening..." : "Shorten URL"}
+          </button>
         </div>
 
-        {error && <p className="mt-3 pl-3 text-red-400 text-sm">{error}</p>}
+        {error && <p className="mt-3 pl-3 text-red-400 text-xs md:text-sm">{error}</p>}
         {shortUrl && (
           <div className="mt-4">
-            <p className="text-sm text-gray-300 mb-1">Your shortened URL:</p>
-            <div className="flex items-center gap-2">
+            <p className="text-sm md:text-m font-semibold text-gray-400 mb-1">Your shortened URL:</p>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
               <a
                 href={shortUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:underline break-all"
+                className="bg-gray-300 text-xs hover:underline break-all p-2 w-full sm:w-auto rounded"
               >
                 {shortUrl}
               </a>
               <button
                 onClick={handleCopy}
-                className="px-2 py-1 bg-gray-800 text-white text-xs rounded hover:bg-gray-950 transition"
+                className="p-2 bg-gray-300 text-black text-xs rounded transition duration-200 w-full sm:w-auto hover:cursor-pointer"
               >
                 {copied ? "Copied!" : "Copy"}
+              </button>
+            </div>
+            <div>
+              <button 
+                onClick={handleReset}
+                className="hover:cursor-pointer mt-2 p-2 bg-linear-to-b from-blue-400 to-blue-600 text-white text-xs rounded hover:bg-gray-950 transition duration-200 w-full sm:w-auto">
+                Shorten another URL
               </button>
             </div>
           </div>
         )}
       </div>
 
-      <div className="mt-10 text-sm text-gray-400">
-        <p className="text-xl font-semibold mb-1">Simple and fast URL shortener!</p>
+      <div className="mt-8 md:mt-10 text-xs md:text-sm text-gray-400">
+        <p className="text-lg md:text-xl font-semibold mb-1">
+          Simple and fast URL shortener!
+        </p>
         <p className="">
           Url-shortener allows to shorten long links from Instagram, Facebook,
           YouTube, Twitter, Linked In, WhatsApp, TikTok, blogs and any domain
@@ -137,7 +183,7 @@ export default function Hero() {
         </p>
       </div>
 
-      <footer className="mt-10 text-xs text-gray-400">
+      <footer className="mt-8 md:mt-10 text-xs text-gray-400 pb-4">
         <p>© 2025 Aditya Patil</p>
       </footer>
     </div>

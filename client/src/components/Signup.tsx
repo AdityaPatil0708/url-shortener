@@ -1,84 +1,67 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
 export default function Signup() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const handleSignup = async () => {
+
+  async function handleSignup() {
     setError("");
 
-    if (!email || !password) {
-      setError("All fields are required");
-      return;
-    }
-
-    setLoading(true);
+    const name = (document.getElementById("signup-name") as HTMLInputElement)
+      .value;
+    const email = (document.getElementById("signup-email") as HTMLInputElement)
+      .value;
+    const password = (
+      document.getElementById("signup-pass") as HTMLInputElement
+    ).value;
 
     try {
-      const response = await fetch("http://localhost:3000/api/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
+      await axios.post("http://localhost:3000/api/signup", {
+        name: name,
+        email: email,
+        password: password,
       });
-
-      const data = await response.json();
-
-      if (data.success) {
-        localStorage.setItem("token", data.token);
-        window.location.href = "/";
-      } else {
-        setError(data.message || "Login failed");
-      }
+      navigate("/login");
     } catch (err) {
-      setError("Network error. Please try again.");
-      console.error("Error:", err);
-    } finally {
-      setLoading(false);
+      if (axios.isAxiosError(err) && err.response) {
+        setError(err.response.data.message || "Signup failed");
+      } else {
+        setError("Network error. Please try again.");
+      }
     }
-    navigate("/login");
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleSignup();
-    }
-  };
+  }
 
   return (
-    <div className="w-90 mt-45 border border-gray-500 rounded-md p-5 pt-10 pb-10">
-      <h2 className="text-xl font-semibold text-center mb-6 text-gray-300">Signup</h2>
+    <div className="w-90 mt-40 md:mt-45 border border-gray-500 rounded-md p-5 pt-8 md:pt-10 pb-8 md:pb-10">
+      <h2 className="text-lg md:text-xl font-semibold text-center mb-5 md:mb-6 text-gray-300">
+        Signup
+      </h2>
       <div>
         <div className="mb-4">
           <label className="block text-gray-400 text-sm font-semibold mb-2 ">
             Name
           </label>
           <input
-            type="email"
-            value={name }
-            onChange={(e) => setName(e.target.value)}
-            onKeyPress={handleKeyPress}
+            autoComplete="off"
+            id="signup-name"
+            type="text"
             className="w-full px-3 py-3 border border-gray-500 rounded-md text-xs text-gray-300 outline-none"
             placeholder="Enter your name"
-            disabled={loading}
           />
         </div>
+        
         <div className="mb-4">
           <label className="block text-gray-400 text-sm font-semibold mb-2 ">
             Email
           </label>
           <input
+            autoComplete="off"
+            id="signup-email"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            onKeyPress={handleKeyPress}
             className="w-full px-3 py-3 border border-gray-500 rounded-md text-xs text-gray-300 outline-none"
             placeholder="Enter your email"
-            disabled={loading}
           />
         </div>
 
@@ -87,31 +70,27 @@ export default function Signup() {
             Password
           </label>
           <input
+            autoComplete="off"
+            id="signup-pass"
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyPress={handleKeyPress}
             className="w-full px-3 py-3 border border-gray-500 rounded-md text-xs text-gray-300 outline-none"
             placeholder="Enter your password"
-            disabled={loading}
           />
         </div>
 
         {error && (
-          <div className="text-red-400 rounded-md text-xs">
+          <div className="text-red-400 rounded-md text-xs mb-2 pl-3">
             {error}
           </div>
         )}
 
         <button
           onClick={handleSignup}
-          disabled={loading}
-          className="w-full mt-4 bg-linear-to-b from-blue-400 to-blue-600 text-gray-100 text-xs py-3 rounded-md hover:cursor-pointer transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full mt-4 bg-linear-to-b from-blue-400 to-blue-600 text-gray-100 text-xs py-3 rounded-md hover:cursor-pointer hover:opacity-90 transition duration-200"
         >
-          {loading ? "Creating account..." : "Create account"}
+          Signup
         </button>
       </div>
-
     </div>
   );
 }

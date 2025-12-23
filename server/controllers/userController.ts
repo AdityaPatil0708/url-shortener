@@ -20,7 +20,7 @@ export const signup = async (req: Request, res: Response) => {
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
-        message: "all fields are required",
+        message: "All fields are required",
       });
     }
     const user = await prisma.user.findUnique({
@@ -29,7 +29,7 @@ export const signup = async (req: Request, res: Response) => {
     if (user) {
       return res.status(400).json({
         success: false,
-        message: "User already exists",
+        message: "User already exists. Go login",
       });
     }
 
@@ -62,7 +62,7 @@ export const login = async (req: Request, res: Response) => {
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message: "all fields are required",
+        message: "All fields are required",
       });
     }
     const user = await prisma.user.findUnique({
@@ -79,7 +79,7 @@ export const login = async (req: Request, res: Response) => {
     if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
-        message: "Invalid credentials",
+        message: "Password Incorrect",
       });
     }
 
@@ -100,6 +100,21 @@ export const login = async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error("Login error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+export const logout = async (req: Request, res: Response) => {
+  try {
+    return res.status(200).json({
+      success: true,
+      message: "Logout successful",
+    });
+  } catch (error) {
+    console.error("Logout error:", error);
     return res.status(500).json({
       success: false,
       message: "Internal server error",

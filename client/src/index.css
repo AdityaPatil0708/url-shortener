@@ -3,14 +3,22 @@
 @import "tailwindcss";
 
 body {
-
+    overflow-x: hidden;
     background: radial-gradient(ellipse at bottom, #0c1637 0%, #00011e 35%, #000000 100%);
     font-family: "poppins", sans-serif;
     margin: 0;
-    padding: 0;
+    padding-left: 20px;
+    padding-right: 20px;
     min-height: 100vh;
-    padding-left: 150px;
-    padding-right: 150px;
+    transform: scale(1.05);
     display: flex;
     justify-content: center;
 }
+
+@media (min-width: 768px) {
+    body {
+        padding-left: 150px;
+        padding-right: 150px;
+    }
+}
+
