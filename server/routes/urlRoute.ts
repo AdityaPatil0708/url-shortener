@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.post("/url",authenticate,url);
 router.post("/shortenurl",authenticate,shorturl);
-router.post("/:shortcode",redirectToOriginalUrl)
+router.get("/:shortcode",redirectToOriginalUrl)
 
 export default router;
