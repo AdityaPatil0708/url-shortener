@@ -3,6 +3,7 @@
 @import "tailwindcss";
 
 body {
+    overflow-x: hidden;
     background: radial-gradient(ellipse at bottom, #0c1637 0%, #00011e 35%, #000000 100%);
     font-family: "poppins", sans-serif;
     margin: 0;
