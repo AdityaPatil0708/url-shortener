@@ -102,7 +102,7 @@ export default function Hero() {
   };
 
   return (
-    <div className="mt-45 md:mt-45 px-4 md:px-0">
+    <div className="mt-45 md:mt-35 px-4 md:px-0">
       <div className="flex justify-between items-center pr-0 md:pr-4">
         <button className="text-2xl md:text-4xl hover:cursor-pointer text-gray-300 font-semibold">
           <span className="bg-linear-to-b from-blue-400 to-blue-700 bg-clip-text text-transparent">

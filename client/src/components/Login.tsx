@@ -30,7 +30,7 @@ export default function Login() {
   }
   
   return (
-    <div className="w-90 px-4 mt-45 md:mt-45 border border-gray-500 rounded-md p-5 pt-8 md:pt-10 pb-8 md:pb-10">
+    <div className="w-90 px-4 mt-45 md:mt-35 border border-gray-500 rounded-md p-5 pt-8 md:pt-10 pb-8 md:pb-10">
       <h2 className="text-lg md:text-xl font-semibold text-center mb-6 md:mb-8 text-gray-300">
         Welcome to <span className="bg-linear-to-b from-blue-400 to-blue-700 bg-clip-text text-transparent">ShortURL!</span>
       </h2>
