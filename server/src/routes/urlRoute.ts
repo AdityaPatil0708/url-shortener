@@ -1,5 +1,5 @@
 import { authenticate } from "../middlewares/authMiddleware.js";
-import { url, shorturl} from "../controllers/urlController";
+import { url, shorturl} from "../controllers/urlController.js";
 import express from "express";
 
 const router = express.Router();
