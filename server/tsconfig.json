@@ -9,5 +9,5 @@
     "outDir": "./dist",
     "rootDir": "./src"
   },
-  "include": ["src/**/*", "src/index.ts", "middlewares", "routes"]
+  "include": ["src/**/*", "src/index.ts", "middlewares", "routes", "prisma"]
 }
