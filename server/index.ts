@@ -5,12 +5,7 @@ import urlRoute from "./routes/urlRoute.js";
 
 const app = express();
 
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'https://url-shortener-flame-nine.vercel.app/',
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+app.use(cors());
 
 app.use(express.json());
 
