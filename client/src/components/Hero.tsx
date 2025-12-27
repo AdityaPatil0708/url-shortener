@@ -102,7 +102,7 @@ export default function Hero() {
   };
 
   return (
-    <div className="mt-45 md:mt-35 px-4 md:px-0">
+    <div className="mt-50 md:mt-35 px-4 md:px-0">
       <div className="flex justify-between items-center pr-0 md:pr-4">
         <button className="text-2xl md:text-4xl hover:cursor-pointer text-gray-300 font-semibold">
           <span className="bg-linear-to-b from-blue-400 to-blue-700 bg-clip-text text-transparent">
@@ -155,18 +155,18 @@ export default function Hero() {
               </a>
               <button
                 onClick={handleCopy}
-                className="p-2 bg-gray-300 text-black text-xs rounded transition duration-200 w-full sm:w-auto hover:cursor-pointer"
+                className="p-2 bg-gray-300 text-black text-xs rounded transition duration-200 sm:w-auto hover:cursor-pointer"
               >
                 {copied ? "Copied!" : "Copy"}
               </button>
             </div>
-            <div>
+            <span>
               <button 
                 onClick={handleReset}
                 className="hover:cursor-pointer mt-2 p-2 bg-linear-to-b from-blue-400 to-blue-600 text-white text-xs rounded hover:bg-gray-950 transition duration-200 w-full sm:w-auto">
                 Shorten another URL
               </button>
-            </div>
+            </span>
           </div>
         )}
       </div>

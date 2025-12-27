@@ -34,7 +34,7 @@ export default function Signup() {
   }
 
   return (
-    <div className="w-90 mt-40 md:mt-35 border border-gray-500 rounded-md p-5 pt-8 md:pt-10 pb-8 md:pb-10">
+    <div className="w-90 mt-50 md:mt-35 border border-gray-500 rounded-md p-5 pt-8 md:pt-10 pb-8 md:pb-10">
       <h2 className="text-lg md:text-xl font-semibold text-center mb-5 md:mb-6 text-gray-300">
         Signup
       </h2>
