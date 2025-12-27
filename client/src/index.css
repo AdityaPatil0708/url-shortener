@@ -16,6 +16,7 @@ body {
 
 @media (min-width: 768px) {
     body {
+        overflow-y: hidden;
         padding-left: 150px;
         padding-right: 150px;
     }
