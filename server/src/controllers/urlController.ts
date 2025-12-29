@@ -2,52 +2,52 @@ import { Request, Response } from "express";
 import validator from 'validator'
 import { prisma } from '../lib/prisma.js';
 
-// Create URL without shortening
+// Input URL
 export const url = async (req: Request, res: Response) => {
-    try {
-      const { url } = req.body;
-      const userId = (req as any).user.id; // Get from auth middleware
-      
-      if (!url) {
-        return res.status(400).json({
-          success: false,
-          message: "URL is required"
-        });
-      }
-      
-      if(!validator.isURL(url,{
-        protocols:['http','https'],
-        require_protocol: true,
-        require_valid_protocol: true
-      })){
-        return res.status(400).json({
-            success: false,
-            message: "Invalid URL format. Must start with http:// or https://"
-          });
-      }
-      
-      const newUrl = await prisma.url.create({
-        data: {
-          url,
-          user: {
-            connect: { id: userId } 
-          }
-        },
-      });
-  
-      return res.status(201).json({
-        success: true,
-        message: "URL created successfully",
-        data: newUrl
-      });
-  
-    } catch (error) {
-      console.error("Create URL error:", error);
-      return res.status(500).json({
+  try {
+    const { url } = req.body;
+    const userId = (req as any).user.id;
+
+    if (!url) {
+      return res.status(400).json({
         success: false,
-        message: "Internal server error"
+        message: "URL is required"
       });
     }
+
+    if (!validator.isURL(url, {
+      protocols: ['http', 'https'],
+      require_protocol: true,
+      require_valid_protocol: true
+    })) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid URL format. Must start with http:// or https://"
+      });
+    }
+
+    const newUrl = await prisma.url.create({
+      data: {
+        url,
+        user: {
+          connect: { id: userId }
+        }
+      },
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "URL created successfully",
+      data: newUrl
+    });
+
+  } catch (error) {
+    console.error("Create URL error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
 };
 
 // Generate code
@@ -65,7 +65,7 @@ export const shorturl = async (req: Request, res: Response) => {
   try {
     const { url } = req.body;
     const userId = (req as any).user.id;
-    
+
     if (!url) {
       return res.status(400).json({
         success: false,
@@ -88,7 +88,7 @@ export const shorturl = async (req: Request, res: Response) => {
       where: {
         url,
         user_id: userId,
-        shortcode: { not: null } 
+        shortcode: { not: null }
       }
     });
 
@@ -118,7 +118,7 @@ export const shorturl = async (req: Request, res: Response) => {
       const existing = await prisma.url.findUnique({
         where: { shortcode }
       });
-      
+
       if (!existing) {
         isUnique = true;
       } else {
@@ -127,7 +127,7 @@ export const shorturl = async (req: Request, res: Response) => {
     }
 
     let resultUrl;
-    
+
 
     if (urlWithoutShortcode) {
       resultUrl = await prisma.url.update({
@@ -155,6 +155,38 @@ export const shorturl = async (req: Request, res: Response) => {
 
   } catch (error) {
     console.error("Shorten URL error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    });
+  }
+};
+
+export const redirect = async (req: Request, res: Response) => {
+  try {
+    const { shortcode } = req.params;
+    if (!shortcode) {
+      return res.status(400).json({
+        success: false,
+        message: "shortcode required"
+      })
+    }
+
+    const existingUrl = await prisma.url.findUnique({
+      where : {shortcode}
+    })
+    if(!existingUrl){
+      return res.status(400).json({
+        success: false,
+        message: "Url not found"
+      })
+    }
+
+    return res.redirect(301,existingUrl.url)
+    
+
+  } catch (error) {
+    console.error("Redirect error:", error);
     return res.status(500).json({
       success: false,
       message: "Internal server error"

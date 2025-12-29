@@ -76,6 +76,7 @@ export default function Hero() {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+  
   const handleReset = () => {
     setUrl("");
     setShortUrl("");
