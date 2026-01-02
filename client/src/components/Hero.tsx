@@ -7,7 +7,6 @@ export default function Hero() {
   const [shortUrl, setShortUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [copied, setCopied] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const navigate = useNavigate();
@@ -20,7 +19,7 @@ export default function Hero() {
   const handleShorten = async () => {
     setError("");
     setShortUrl("");
-    setCopied(false);
+
 
     if (!url.trim()) {
       setError("Please enter a URL");
@@ -70,18 +69,12 @@ export default function Hero() {
       setLoading(false);
     }
   };
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(shortUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
   
   const handleReset = () => {
     setUrl("");
     setShortUrl("");
     setError("");
-    setCopied(false);
+
   };
 
   const handleAuthAction = async () => {
@@ -154,12 +147,6 @@ export default function Hero() {
               >
                 {shortUrl}
               </a>
-              <button
-                onClick={handleCopy}
-                className="p-2 bg-gray-300 text-black text-xs rounded transition duration-200 sm:w-auto hover:cursor-pointer"
-              >
-                {copied ? "Copied!" : "Copy"}
-              </button>
             </div>
             <span>
               <button 
