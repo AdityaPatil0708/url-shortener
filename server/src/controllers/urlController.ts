@@ -196,8 +196,8 @@
 
 import { Request, Response } from "express";
 import validator from 'validator';
-import { prisma } from '../lib/prisma';
-import { redisClient } from '../lib/redis';
+import { prisma } from '../lib/prisma.js';
+import { redisClient } from '../lib/redis.js';
 
 // Cache TTL (Time To Live) - 24 hours in seconds
 const CACHE_TTL = 86400;
