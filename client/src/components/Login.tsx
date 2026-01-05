@@ -4,10 +4,12 @@ import axios from "axios";
 
 export default function Login() {
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   async function handleLogin() {
     setError("");
+    setLoading(true);
     
     const email = (document.getElementById("login-email") as HTMLInputElement).value;
     const password = (document.getElementById("login-pass") as HTMLInputElement).value;
@@ -26,6 +28,8 @@ export default function Login() {
       } else {
         setError("Network error. Please try again.");
       }
+    } finally {
+      setLoading(false);
     }
   }
   
@@ -68,12 +72,12 @@ export default function Login() {
 
         <button
           onClick={handleLogin}
-          className="w-full mt-4 bg-linear-to-b from-blue-400 to-blue-600 text-gray-100 text-xs py-3 rounded-md hover:cursor-pointer hover:opacity-90 transition duration-200"
+          disabled={loading}
+          className="w-full mt-4 bg-linear-to-b from-blue-400 to-blue-600 text-gray-100 text-xs py-3 rounded-md hover:cursor-pointer hover:opacity-90 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </button>
       </div>
-
       <p className="mt-4 text-center text-xs md:text-sm text-gray-300">
         Don't have an account?{" "}
         <a
@@ -83,6 +87,9 @@ export default function Login() {
           Sign up
         </a>
       </p>
+
     </div>
   );
 }
+
+      

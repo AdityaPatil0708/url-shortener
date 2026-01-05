@@ -4,10 +4,12 @@ import axios from "axios";
 
 export default function Signup() {
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   async function handleSignup() {
     setError("");
+    setLoading(true);
 
     const name = (document.getElementById("signup-name") as HTMLInputElement)
       .value;
@@ -30,6 +32,8 @@ export default function Signup() {
       } else {
         setError("Network error. Please try again.");
       }
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -86,9 +90,10 @@ export default function Signup() {
 
         <button
           onClick={handleSignup}
-          className="w-full mt-4 bg-linear-to-b from-blue-400 to-blue-600 text-gray-100 text-xs py-3 rounded-md hover:cursor-pointer hover:opacity-90 transition duration-200"
+          disabled={loading}
+          className="w-full mt-4 bg-linear-to-b from-blue-400 to-blue-600 text-gray-100 text-xs py-3 rounded-md hover:cursor-pointer hover:opacity-90 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Signup
+          {loading ? "Signing up..." : "Signup"}
         </button>
       </div>
     </div>
